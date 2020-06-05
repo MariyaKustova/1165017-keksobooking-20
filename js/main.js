@@ -9,23 +9,26 @@ var CHECKOUT = CHECKIN;
 var FEATURES = ['wifi', 'ishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var DESCRIPTION = ['квартира в центре города со всеми удобствами', 'жилье в самом центре города', 'домик со всеми удобствами', 'просторное жилище с евроремонтом', 'скромное жилье 36 кв.м.', 'квартира с прекрасным видом из окна', 'подходящее жилье для привередливых гостей', 'жилье класса люкс со всем необходимым'];
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
+var OFFSET_X = 25;
+var OFFSET_Y = 70;
 var offers = [];
+var mapPins = document.querySelector('.map__pins');
 
 var getRandomNumber = function (min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min;
+  var rand = min + Math.random() * (max + 1 - min);
+  return Math.floor(rand);
 };
 
-var getMyObject = function (index) {
+var getObjectOffer = function (index) {
   var type = TYPES[getRandomNumber(0, 3)];
   var checkin = CHECKIN[getRandomNumber(0, 2)];
   var checkout = CHECKOUT[getRandomNumber(0, 2)];
+  var offsetWidth = mapPins.offsetWidth;
   var location = {
-    x: getRandomNumber(0, 1200),
+    x: getRandomNumber(0, offsetWidth),
     y: getRandomNumber(130, 630),
   };
-  var myObject = {
+  var objectOffer = {
     author: {
       avatar: 'img/avatars/user0' + (index + 1) + '.png',
     },
@@ -44,26 +47,23 @@ var getMyObject = function (index) {
     },
     location: location,
   };
-  return myObject;
+  return objectOffer;
 };
 
 for (var i = 0; i < 8; i++) {
-  var element = getMyObject(i);
+  var element = getObjectOffer(i);
   offers.push(element);
 }
 
 var map = document.querySelector('.map');
 map.classList.remove('map--faded');
 
-var mapPins = document.querySelector('.map__pins');
 var pin = document.querySelector('#pin').content.querySelector('.map__pin');
 
 var createElement = function (offer) {
   var mapPin = pin.cloneNode(true);
-  var offsetX = 25;
-  var offsetY = 70;
-  var left = offer.location.x - offsetX;
-  var top = offer.location.y + offsetY;
+  var left = offer.location.x - OFFSET_X;
+  var top = offer.location.y - OFFSET_Y;
   mapPin.style = 'left: ' + left + 'px; top: ' + top + 'px;';
   mapPin.querySelector('img').src = offer.author.avatar;
   mapPin.querySelector('img').alt = offer.offer.title;
