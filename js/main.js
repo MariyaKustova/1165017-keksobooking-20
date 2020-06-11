@@ -23,6 +23,11 @@ var getRandomNumber = function (min, max) {
   return Math.floor(rand);
 };
 
+var getRandomNumArr = function (element) {
+  var randomNumArr = element[getRandomNumber(0, element.length - 1)];
+  return randomNumArr;
+};
+
 var getAnnouncement = function (index) {
   var offsetWidth = mapPins.offsetWidth;
   var location = {
@@ -36,12 +41,12 @@ var getAnnouncement = function (index) {
     offer: {
       title: TITLES[index],
       address: location.x + ', ' + location.y,
-      price: PRICES[getRandomNumber(0, PRICES.length - 1)],
-      type: TYPES[getRandomNumber(0, TYPES.length - 1)],
-      rooms: ROOMS[getRandomNumber(0, ROOMS.length - 1)],
-      guests: GUESTS[getRandomNumber(0, GUESTS.length - 1)],
-      checkin: CHECKIN[getRandomNumber(0, CHECKIN.length - 1)],
-      checkout: CHECKOUT[getRandomNumber(0, CHECKOUT.length - 1)],
+      price: getRandomNumArr(PRICES),
+      type: getRandomNumArr(TYPES),
+      rooms: getRandomNumArr(ROOMS),
+      guests: getRandomNumArr(GUESTS),
+      checkin: getRandomNumArr(CHECKIN),
+      checkout: getRandomNumArr(CHECKOUT),
       features: FEATURES.slice(getRandomNumber(0, FEATURES.length - 1)),
       description: DESCRIPTION[index],
       photos: PHOTOS_SRC.slice(getRandomNumber(0, PHOTOS_SRC.length - 1)),
@@ -147,22 +152,26 @@ var hideUnexistingElement = function (container, value) {
 
 var mapFilters = map.querySelector('.map__filters-container');
 
+var createSimpleText = function (container, element) {
+  container.textContent = element;
+};
+
 // Функция создания одной карточки объявления
 var createCard = function (element) {
   var card = popup.cloneNode(true);
   hideUnexistingElement(card.querySelector('.popup__title'), element.offer.title);
-  card.querySelector('.popup__title').textContent = element.offer.title;
+  createSimpleText(card.querySelector('.popup__title'), element.offer.title);
   hideUnexistingElement(card.querySelector('.popup__text--address'), element.offer.address);
-  card.querySelector('.popup__text--address').textContent = element.offer.address;
+  createSimpleText(card.querySelector('.popup__text--address'), element.offer.address);
   hideUnexistingElement(card.querySelector('.popup__text--price'), element.offer.price);
-  card.querySelector('.popup__text--price').textContent = element.offer.price + '₽/ночь';
+  createSimpleText(card.querySelector('.popup__text--price'), element.offer.price + '₽/ночь');
   hideUnexistingElement(card.querySelector('.popup__type'), element.offer.type);
-  card.querySelector('.popup__type').textContent = element.offer.type;
+  createSimpleText(card.querySelector('.popup__type'), element.offer.type);
   createCapacity(card.querySelector('.popup__text--capacity'), element);
   createTime(card.querySelector('.popup__text--time'), element);
   createFeatures(card.querySelector('.popup__features'), element);
   hideUnexistingElement(card.querySelector('.popup__description'), element.offer.description);
-  card.querySelector('.popup__description').textContent = element.offer.description;
+  createSimpleText(card.querySelector('.popup__description'), element.offer.description);
   createPhotos(card.querySelector('.popup__photos'), element);
   hideUnexistingElement(card.querySelector('.popup__avatar'), element.author.avatar);
   card.querySelector('.popup__avatar').src = element.author.avatar;
