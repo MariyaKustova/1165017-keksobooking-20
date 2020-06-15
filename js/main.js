@@ -48,6 +48,9 @@ var enableActiveMode = function () {
   adForm.classList.remove('ad-form--disabled');
   enableControls(fieldsets);
   enableControls(selects);
+  mapPins.appendChild(fragment);
+  createCard(ads[0]);
+  defineCoordinatesMap();
 };
 
 var defineCoordinatesMap = function () {
@@ -70,16 +73,6 @@ defineCoordinatesMap();
 mapPinMain.addEventListener('mousedown', function (evt) {
   if (evt.button === 0) {
     enableActiveMode();
-    mapPins.appendChild(fragment);
-    createCard(ads[0]);
-    defineCoordinatesMap();
-  }
-});
-
-mapPinMain.addEventListener('keydown', function (evt) {
-  if (evt.key === 'Enter') {
-    enableActiveMode();
-    defineCoordinatesMap();
   }
 });
 
