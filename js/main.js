@@ -34,15 +34,13 @@ var capacity = adForm.querySelector('#capacity');
 var disableControls = function (element) {
   element.forEach(function (item) {
     item.disabled = true;
-  }
-  );
+  });
 };
 
 var enableControls = function (element) {
   element.forEach(function (item) {
     item.disabled = false;
-  }
-  );
+  });
 };
 
 var enableActiveMode = function () {
@@ -81,34 +79,45 @@ mapPinMain.addEventListener('mousedown', function (evt) {
 mapPinMain.addEventListener('keydown', function (evt) {
   if (evt.key === 'Enter') {
     enableActiveMode();
+    defineCoordinatesMap();
+  }
+});
+
+mapPinMain.addEventListener('keydown', function (evt) {
+  if (evt.key === 'Enter') {
+    enableActiveMode();
   }
 });
 
 selectType.addEventListener('change', function () {
-  if (selectType.value === 'bungalo') {
-    priceInput.min = 0;
-    priceInput.placeholder = 0;
-  } else if (selectType.value === 'flat') {
-    priceInput.min = 1000;
-    priceInput.placeholder = 1000;
-  } else if (selectType.value === 'house') {
-    priceInput.min = 5000;
-    priceInput.placeholder = 5000;
-  } else if (selectType.value === 'palace') {
-    priceInput.min = 10000;
-    priceInput.placeholder = 10000;
+  switch (selectType.value) {
+    case 'bungalo':
+      priceInput.min = 0;
+      priceInput.placeholder = 0;
+      break;
+    case 'flat':
+      priceInput.min = 1000;
+      priceInput.placeholder = 1000;
+      break;
+    case 'house':
+      priceInput.min = 5000;
+      priceInput.placeholder = 5000;
+      break;
+    case 'palace':
+      priceInput.min = 10000;
+      priceInput.placeholder = 10000;
   }
 });
 
-var adjustsTime = function (time1, time2) {
+var adjustTime = function (time1, time2) {
   time1.addEventListener('change', function () {
     time2.value = time1.value;
   });
 };
 
-adjustsTime(selectTimein, selectTimeout);
+adjustTime(selectTimein, selectTimeout);
 
-adjustsTime(selectTimeout, selectTimein);
+adjustTime(selectTimeout, selectTimein);
 
 var validateRoomCapacity = function () {
   if (roomNumber.value === '100' && capacity.value !== '0') {
