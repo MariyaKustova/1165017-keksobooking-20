@@ -8,6 +8,14 @@
   var selectTimeout = adForm.querySelector('#timeout');
   var roomNumber = adForm.querySelector('#room_number');
   var capacity = adForm.querySelector('#capacity');
+  var addressInput = adForm.querySelector('#address');
+
+  var refreshAddress = function () {
+    var coordinates = window.map.defineCoordinatesMap();
+    addressInput.value = coordinates.x + ', ' + coordinates.y;
+  };
+
+  refreshAddress();
 
   selectType.addEventListener('change', function () {
     switch (selectType.value) {
@@ -54,4 +62,8 @@
   roomNumber.addEventListener('change', validateRoomCapacity);
 
   capacity.addEventListener('change', validateRoomCapacity);
+
+  window.form = {
+    refreshAddress: refreshAddress
+  };
 })();
