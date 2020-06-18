@@ -57,13 +57,12 @@
     }
   };
 
-  getAds();
-
   window.announcements = {
     MIN_MAP_X: MIN_MAP_X,
     MAX_MAP_X: MAX_MAP_X,
     MIN_MAP_Y: MIN_MAP_Y,
     MAX_MAP_Y: MAX_MAP_Y,
+    getAds: getAds,
     ads: ads
   };
 })();
