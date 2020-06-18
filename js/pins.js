@@ -17,14 +17,17 @@
 
   var fragment = document.createDocumentFragment();
 
-  for (var j = 0; j < window.announcements.ads.length; j++) {
-    var mapPin = createMapPin(window.announcements.ads[j]);
-    fragment.appendChild(mapPin);
-  }
+  var createMapPins = function () {
+    window.announcements.ads.forEach(function (item) {
+      var mapPin = createMapPin(item);
+      fragment.appendChild(mapPin);
+    });
+  };
 
   window.pins = {
     OFFSET_X: OFFSET_X,
     OFFSET_Y: OFFSET_Y,
     fragment: fragment,
+    createMapPins: createMapPins
   };
 })();

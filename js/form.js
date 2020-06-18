@@ -15,8 +15,6 @@
     addressInput.value = coordinates.x + ', ' + coordinates.y;
   };
 
-  refreshAddress();
-
   selectType.addEventListener('change', function () {
     switch (selectType.value) {
       case 'bungalo':

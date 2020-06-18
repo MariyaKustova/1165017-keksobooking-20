@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var map = document.querySelector('.map');
+  var map = window.map.map;
   var popup = document.querySelector('#card').content.querySelector('.popup');
 
   var createPhotos = function (container, element) {
@@ -40,8 +40,8 @@
     if (checkEmptyItem(element.offer.rooms) || checkEmptyItem(element.offer.guests)) {
       container.classList.add('hidden');
     } else {
-      container.textContent = element.offer.rooms + ' ' + window.inclineNumber(element.offer.rooms, ['комната', 'комнаты', 'комнат']) + ' для ' +
-        element.offer.guests + ' ' + window.inclineNumber(element.offer.guests, ['гостя', 'гостей', 'гостей']);
+      container.textContent = element.offer.rooms + ' ' + window.utils.inclineNumber(element.offer.rooms, ['комната', 'комнаты', 'комнат']) + ' для ' +
+        element.offer.guests + ' ' + window.utils.inclineNumber(element.offer.guests, ['гостя', 'гостей', 'гостей']);
     }
   };
 

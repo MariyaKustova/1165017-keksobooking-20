@@ -15,24 +15,18 @@
   var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
   var DESCRIPTION = ['квартира в центре города со всеми удобствами', 'жилье в самом центре города', 'домик со всеми удобствами', 'просторное жилище с евроремонтом', 'скромное жилье 36 кв.м.', 'квартира с прекрасным видом из окна', 'подходящее жилье для привередливых гостей', 'жилье класса люкс со всем необходимым'];
   var PHOTOS_SRC = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
+  var MIN_MAP_X = 0;
+  var MAX_MAP_X = window.map.mapPins.offsetWidth;
+  var MIN_MAP_Y = 130;
+  var MAX_MAP_Y = 630;
+  var getRandomNumber = window.utils.getRandomNumber;
+  var getRandomNumArr = window.utils.getRandomNumArr;
   var ads = [];
-  var mapPins = document.querySelector('.map__pins');
-
-  var getRandomNumber = function (min, max) {
-    var rand = min + Math.random() * (max + 1 - min);
-    return Math.floor(rand);
-  };
-
-  var getRandomNumArr = function (element) {
-    var randomNumArr = element[getRandomNumber(0, element.length - 1)];
-    return randomNumArr;
-  };
 
   var getAnnouncement = function (index) {
-    var offsetWidth = mapPins.offsetWidth;
     var location = {
-      x: getRandomNumber(0, offsetWidth),
-      y: getRandomNumber(130, 630),
+      x: getRandomNumber(MIN_MAP_X, MAX_MAP_X),
+      y: getRandomNumber(MIN_MAP_Y, MAX_MAP_Y),
     };
     var announcement = {
       author: {
@@ -56,12 +50,20 @@
     return announcement;
   };
 
-  for (var i = 0; i < 8; i++) {
-    var announcement = getAnnouncement(i);
-    ads.push(announcement);
-  }
+  var getAds = function () {
+    for (var i = 0; i < 8; i++) {
+      var announcement = getAnnouncement(i);
+      ads.push(announcement);
+    }
+  };
+
+  getAds();
+
   window.announcements = {
-    ads: ads,
-    mapPins: mapPins,
+    MIN_MAP_X: MIN_MAP_X,
+    MAX_MAP_X: MAX_MAP_X,
+    MIN_MAP_Y: MIN_MAP_Y,
+    MAX_MAP_Y: MAX_MAP_Y,
+    ads: ads
   };
 })();
