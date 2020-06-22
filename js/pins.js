@@ -15,19 +15,18 @@
     return mapPin;
   };
 
-  var fragment = document.createDocumentFragment();
-
-  var createMapPins = function () {
-    window.announcements.ads.forEach(function (item) {
+  var createMapPins = function (ads) {
+    var fragment = document.createDocumentFragment();
+    ads.forEach(function (item) {
       var mapPin = createMapPin(item);
       fragment.appendChild(mapPin);
     });
+    return fragment;
   };
 
   window.pins = {
     OFFSET_X: OFFSET_X,
     OFFSET_Y: OFFSET_Y,
-    fragment: fragment,
     createMapPins: createMapPins
   };
 })();

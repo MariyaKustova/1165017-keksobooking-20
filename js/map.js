@@ -25,8 +25,16 @@
     adForm.classList.remove('ad-form--disabled');
     enableControls(fieldsets);
     enableControls(selects);
-    mapPins.appendChild(window.pins.fragment);
-    window.card.createCard(window.announcements.ads[0]);
+    window.xhr.load(function (response) {
+      var fragment = window.pins.createMapPins(response);
+      mapPins.appendChild(fragment);
+      window.card.createCard(response[0]);
+    }, function (errorMessage) {
+      var messageErrorTmpl = document.querySelector('#error-get').content.querySelector('.error');
+      var messageError = messageErrorTmpl.cloneNode(true);
+      messageError.querySelector('.error__message').textContent += ' ' + errorMessage;
+      document.body.appendChild(messageError);
+    });
     window.form.refreshAddress();
   };
 
