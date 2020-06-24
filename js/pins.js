@@ -2,8 +2,8 @@
 
 (function () {
   var pin = document.querySelector('#pin').content.querySelector('.map__pin');
-  var OFFSET_X = 25;
-  var OFFSET_Y = 70;
+  var OFFSET_X = window.map.mapPinMain.offsetWidth / 2;
+  var OFFSET_Y = 84;
 
   var createMapPin = function (card) {
     var mapPin = pin.cloneNode(true);
@@ -17,14 +17,17 @@
 
   var fragment = document.createDocumentFragment();
 
-  for (var j = 0; j < window.announcements.ads.length; j++) {
-    var mapPin = createMapPin(window.announcements.ads[j]);
-    fragment.appendChild(mapPin);
-  }
+  var createMapPins = function () {
+    window.announcements.ads.forEach(function (item) {
+      var mapPin = createMapPin(item);
+      fragment.appendChild(mapPin);
+    });
+  };
 
-  window.mapPins = {
+  window.pins = {
     OFFSET_X: OFFSET_X,
     OFFSET_Y: OFFSET_Y,
     fragment: fragment,
+    createMapPins: createMapPins
   };
 })();
