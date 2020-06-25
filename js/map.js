@@ -2,44 +2,32 @@
 
 (function () {
   var map = document.querySelector('.map');
-  var adForm = document.querySelector('.ad-form');
   var mapPins = document.querySelector('.map__pins');
   var mapPinMain = mapPins.querySelector('.map__pin--main');
   var startCoords = {
     x: mapPinMain.style.left,
     y: mapPinMain.style.top
   };
-  var fieldsets = document.querySelectorAll('fieldset');
-  var selects = document.querySelectorAll('select');
-
-  var disableControls = function (element) {
-    element.forEach(function (item) {
-      item.disabled = true;
-    });
-  };
-
-  var enableControls = function (element) {
-    element.forEach(function (item) {
-      item.disabled = false;
-    });
-  };
-
-  var disableForm = function () {
-    disableControls(fieldsets);
-    disableControls(selects);
-  };
+  var isActive = false;
 
   var disableActiveMode = function () {
     map.classList.add('map--faded');
-    adForm.classList.add('ad-form--disabled');
-    disableForm();
+    isActive = false;
+    window.form.disableForm();
+    var pins = mapPins.querySelectorAll('.map__pin');
+    for (var i = 1; i < pins.length; i++) {
+      pins[i].remove();
+    }
+    var card = document.querySelector('.popup');
+    card.remove();
+    mapPinMain.style.top = startCoords.y;
+    mapPinMain.style.left = startCoords.x;
   };
 
   var enableActiveMode = function () {
     map.classList.remove('map--faded');
-    adForm.classList.remove('ad-form--disabled');
-    enableControls(fieldsets);
-    enableControls(selects);
+    isActive = true;
+    window.form.enableForm();
     window.xhr.load(function (response) {
       var fragment = window.pins.createMapPins(response);
       mapPins.appendChild(fragment);
@@ -57,8 +45,8 @@
     var coordinateX;
     var coordinateY;
     if (map.classList.contains('map--faded')) {
-      coordinateX = Math.round(parseInt(startCoords.x, 10) + window.pins.OFFSET_X);
-      coordinateY = Math.round(parseInt(startCoords.y, 10) + mapPinMain.offsetHeight / 2);
+      coordinateX = Math.round(parseInt(mapPinMain.style.left, 10) + window.pins.OFFSET_X);
+      coordinateY = Math.round(parseInt(mapPinMain.style.top, 10) + mapPinMain.offsetHeight / 2);
     } else {
       coordinateX = Math.round(parseInt(mapPinMain.style.left, 10) + window.pins.OFFSET_X);
       coordinateY = Math.round(parseInt(mapPinMain.style.top, 10) + window.pins.OFFSET_Y);
@@ -71,13 +59,17 @@
 
   mapPinMain.addEventListener('mousedown', function (evt) {
     if (evt.button === 0) {
-      enableActiveMode();
+      if (!isActive) {
+        enableActiveMode();
+      }
     }
   });
 
   mapPinMain.addEventListener('keydown', function (evt) {
     if (evt.key === 'Enter') {
-      enableActiveMode();
+      if (!isActive) {
+        enableActiveMode();
+      }
     }
   });
 
@@ -86,7 +78,7 @@
     mapPins: mapPins,
     mapPinMain: mapPinMain,
     defineCoordinatesMap: defineCoordinatesMap,
-    disableForm: disableForm,
-    disableActiveMode: disableActiveMode
+    disableActiveMode: disableActiveMode,
+    isMapActive: isActive
   };
 })();

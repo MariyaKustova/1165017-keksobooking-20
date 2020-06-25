@@ -2,5 +2,5 @@
 
 (function () {
   window.form.refreshAddress();
-  window.map.disableForm();
+  window.form.disableForm();
 })();

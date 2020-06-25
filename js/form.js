@@ -9,8 +9,37 @@
   var roomNumber = adForm.querySelector('#room_number');
   var capacity = adForm.querySelector('#capacity');
   var addressInput = adForm.querySelector('#address');
-  var mapPins = window.map.mapPins;
   var buttonResetForm = adForm.querySelector('.ad-form__reset');
+  var fieldsets = document.querySelectorAll('fieldset');
+  var selects = document.querySelectorAll('select');
+
+  var disableControls = function (element) {
+    element.forEach(function (item) {
+      item.disabled = true;
+    });
+  };
+
+  var enableControls = function (element) {
+    element.forEach(function (item) {
+      item.disabled = false;
+    });
+  };
+
+  var disableForm = function () {
+    if (!adForm.classList.contains('ad-form--disabled')) {
+      adForm.classList.add('ad-form--disabled');
+    }
+    disableControls(fieldsets);
+    disableControls(selects);
+    adForm.reset();
+    refreshAddress();
+  };
+
+  var enableForm = function () {
+    adForm.classList.remove('ad-form--disabled');
+    enableControls(fieldsets);
+    enableControls(selects);
+  };
 
   var refreshAddress = function () {
     var coordinates = window.map.defineCoordinatesMap();
@@ -83,22 +112,10 @@
     onDocumentKeydown(messageSuccess);
   };
 
-  var enableInactiveState = function () {
-    window.map.disableActiveMode();
-    var pins = mapPins.querySelectorAll('.map__pin');
-    for (var i = 1; i < pins.length; i++) {
-      pins[i].remove();
-    }
-    var card = document.querySelector('.popup');
-    card.remove();
-    adForm.reset();
-    refreshAddress();
-  };
-
   adForm.addEventListener('submit', function (evt) {
     window.xhr.upload(new FormData(adForm), function () {
       showMessageSuccess();
-      enableInactiveState();
+      window.map.disableActiveMode();
     }, function () {
       var messageErrorTmpl = document.querySelector('#error').content.querySelector('.error');
       var messageError = messageErrorTmpl.cloneNode(true);
@@ -111,17 +128,19 @@
 
   buttonResetForm.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
-    enableInactiveState();
+    window.map.disableActiveMode();
   });
 
   buttonResetForm.addEventListener('keydown', function (evt) {
     evt.preventDefault();
     if (evt.key === 'Enter') {
-      enableInactiveState();
+      window.map.disableActiveMode();
     }
   });
 
   window.form = {
+    enableForm: enableForm,
+    disableForm: disableForm,
     refreshAddress: refreshAddress
   };
 })();
