@@ -85,10 +85,12 @@
 
   var enableInactiveState = function () {
     window.map.disableActiveMode();
-    var pins = mapPins.querySelectorAll('.map-pin');
-    pins.forEach(function (item) {
-      item.remove();
-    });
+    var pins = mapPins.querySelectorAll('.map__pin');
+    for (var i = 1; i < pins.length; i++) {
+      pins[i].remove();
+    }
+    var card = document.querySelector('.popup');
+    card.remove();
     adForm.reset();
     refreshAddress();
   };

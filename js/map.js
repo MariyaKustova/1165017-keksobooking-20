@@ -5,6 +5,10 @@
   var adForm = document.querySelector('.ad-form');
   var mapPins = document.querySelector('.map__pins');
   var mapPinMain = mapPins.querySelector('.map__pin--main');
+  var startCoords = {
+    x: mapPinMain.style.left,
+    y: mapPinMain.style.top
+  };
   var fieldsets = document.querySelectorAll('fieldset');
   var selects = document.querySelectorAll('select');
 
@@ -53,8 +57,8 @@
     var coordinateX;
     var coordinateY;
     if (map.classList.contains('map--faded')) {
-      coordinateX = Math.round(parseInt(mapPinMain.style.left, 10) + window.pins.OFFSET_X);
-      coordinateY = Math.round(parseInt(mapPinMain.style.top, 10) + mapPinMain.offsetHeight / 2);
+      coordinateX = Math.round(parseInt(startCoords.x, 10) + window.pins.OFFSET_X);
+      coordinateY = Math.round(parseInt(startCoords.y, 10) + mapPinMain.offsetHeight / 2);
     } else {
       coordinateX = Math.round(parseInt(mapPinMain.style.left, 10) + window.pins.OFFSET_X);
       coordinateY = Math.round(parseInt(mapPinMain.style.top, 10) + window.pins.OFFSET_Y);
