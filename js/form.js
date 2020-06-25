@@ -86,7 +86,9 @@
   var enableInactiveState = function () {
     window.map.disableActiveMode();
     var pins = mapPins.querySelectorAll('.map-pin');
-    pins.remove();
+    pins.forEach(function (item) {
+      item.remove();
+    });
     adForm.reset();
     refreshAddress();
   };
