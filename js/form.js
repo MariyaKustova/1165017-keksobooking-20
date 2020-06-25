@@ -9,6 +9,8 @@
   var roomNumber = adForm.querySelector('#room_number');
   var capacity = adForm.querySelector('#capacity');
   var addressInput = adForm.querySelector('#address');
+  var mapPins = window.map.mapPins;
+  var buttonResetForm = adForm.querySelector('.ad-form__reset');
 
   var refreshAddress = function () {
     var coordinates = window.map.defineCoordinatesMap();
@@ -42,7 +44,6 @@
   };
 
   adjustTime(selectTimein, selectTimeout);
-
   adjustTime(selectTimeout, selectTimein);
 
   var validateRoomCapacity = function () {
@@ -58,8 +59,63 @@
   };
 
   roomNumber.addEventListener('change', validateRoomCapacity);
-
   capacity.addEventListener('change', validateRoomCapacity);
+
+  var onDocumentClick = function (element) {
+    document.addEventListener('click', function () {
+      element.remove();
+    });
+  };
+
+  var onDocumentKeydown = function (element) {
+    document.addEventListener('keydown', function (evt) {
+      if (evt.key === 'Escape') {
+        element.remove();
+      }
+    });
+  };
+
+  var showMessageSuccess = function () {
+    var messageSuccessTmpl = document.querySelector('#success').content.querySelector('.success');
+    var messageSuccess = messageSuccessTmpl.cloneNode(true);
+    document.body.appendChild(messageSuccess);
+    onDocumentClick(messageSuccess);
+    onDocumentKeydown(messageSuccess);
+  };
+
+  var enableInactiveState = function () {
+    window.map.disableActiveMode();
+    var pins = mapPins.querySelectorAll('.map-pin');
+    pins.remove();
+    adForm.reset();
+    refreshAddress();
+  };
+
+  adForm.addEventListener('submit', function (evt) {
+    window.xhr.upload(new FormData(adForm), function () {
+      showMessageSuccess();
+      enableInactiveState();
+    }, function () {
+      var messageErrorTmpl = document.querySelector('#error').content.querySelector('.error');
+      var messageError = messageErrorTmpl.cloneNode(true);
+      document.body.appendChild(messageError);
+      onDocumentClick(messageError);
+      onDocumentKeydown(messageError);
+    });
+    evt.preventDefault();
+  });
+
+  buttonResetForm.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+    enableInactiveState();
+  });
+
+  buttonResetForm.addEventListener('keydown', function (evt) {
+    evt.preventDefault();
+    if (evt.key === 'Enter') {
+      enableInactiveState();
+    }
+  });
 
   window.form = {
     refreshAddress: refreshAddress

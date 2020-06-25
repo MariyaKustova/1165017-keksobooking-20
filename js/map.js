@@ -20,6 +20,17 @@
     });
   };
 
+  var disableForm = function () {
+    disableControls(fieldsets);
+    disableControls(selects);
+  };
+
+  var disableActiveMode = function () {
+    map.classList.add('map--faded');
+    adForm.classList.add('ad-form--disabled');
+    disableForm();
+  };
+
   var enableActiveMode = function () {
     map.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
@@ -54,12 +65,6 @@
     };
   };
 
-  var disableMap = function () {
-    defineCoordinatesMap();
-    disableControls(fieldsets);
-    disableControls(selects);
-  };
-
   mapPinMain.addEventListener('mousedown', function (evt) {
     if (evt.button === 0) {
       enableActiveMode();
@@ -77,6 +82,7 @@
     mapPins: mapPins,
     mapPinMain: mapPinMain,
     defineCoordinatesMap: defineCoordinatesMap,
-    disableMap: disableMap
+    disableForm: disableForm,
+    disableActiveMode: disableActiveMode
   };
 })();
