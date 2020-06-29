@@ -115,7 +115,8 @@
   adForm.addEventListener('submit', function (evt) {
     window.xhr.upload(new FormData(adForm), function () {
       showMessageSuccess();
-      window.map.disableActiveMode();
+      window.map.disableMap();
+      disableForm();
     }, function () {
       var messageErrorTmpl = document.querySelector('#error').content.querySelector('.error');
       var messageError = messageErrorTmpl.cloneNode(true);
@@ -128,13 +129,15 @@
 
   buttonResetForm.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
-    window.map.disableActiveMode();
+    window.map.disableMap();
+    disableForm();
   });
 
-  buttonResetForm.addEventListener('keydown', function (evt) {
+  buttonResetForm.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
-    if (evt.key === 'Enter') {
-      window.map.disableActiveMode();
+    if (evt.button === 0) {
+      window.map.disableMap();
+      disableForm();
     }
   });
 

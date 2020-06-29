@@ -10,10 +10,9 @@
   };
   var isActive = false;
 
-  var disableActiveMode = function () {
+  var disableMap = function () {
     map.classList.add('map--faded');
     isActive = false;
-    window.form.disableForm();
     var pins = mapPins.querySelectorAll('.map__pin');
     for (var i = 1; i < pins.length; i++) {
       pins[i].remove();
@@ -24,10 +23,9 @@
     mapPinMain.style.left = startCoords.x;
   };
 
-  var enableActiveMode = function () {
+  var enableMap = function () {
     map.classList.remove('map--faded');
     isActive = true;
-    window.form.enableForm();
     window.xhr.load(function (response) {
       var fragment = window.pins.createMapPins(response);
       mapPins.appendChild(fragment);
@@ -60,7 +58,8 @@
   mapPinMain.addEventListener('mousedown', function (evt) {
     if (evt.button === 0) {
       if (!isActive) {
-        enableActiveMode();
+        enableMap();
+        window.form.enableForm();
       }
     }
   });
@@ -68,7 +67,8 @@
   mapPinMain.addEventListener('keydown', function (evt) {
     if (evt.key === 'Enter') {
       if (!isActive) {
-        enableActiveMode();
+        enableMap();
+        window.form.enableForm();
       }
     }
   });
@@ -78,7 +78,6 @@
     mapPins: mapPins,
     mapPinMain: mapPinMain,
     defineCoordinatesMap: defineCoordinatesMap,
-    disableActiveMode: disableActiveMode,
-    isMapActive: isActive
+    disableMap: disableMap
   };
 })();

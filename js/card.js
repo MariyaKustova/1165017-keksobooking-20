@@ -94,7 +94,6 @@
   };
 
   window.card = {
-    map: map,
     createCard: createCard,
   };
 })();
