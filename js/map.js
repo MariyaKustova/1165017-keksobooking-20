@@ -2,29 +2,30 @@
 
 (function () {
   var map = document.querySelector('.map');
-  var adForm = document.querySelector('.ad-form');
   var mapPins = document.querySelector('.map__pins');
   var mapPinMain = mapPins.querySelector('.map__pin--main');
-  var fieldsets = document.querySelectorAll('fieldset');
-  var selects = document.querySelectorAll('select');
+  var startCoords = {
+    x: mapPinMain.style.left,
+    y: mapPinMain.style.top
+  };
+  var isActive = false;
 
-  var disableControls = function (element) {
-    element.forEach(function (item) {
-      item.disabled = true;
-    });
+  var disableMap = function () {
+    map.classList.add('map--faded');
+    isActive = false;
+    var pins = mapPins.querySelectorAll('.map__pin');
+    for (var i = 1; i < pins.length; i++) {
+      pins[i].remove();
+    }
+    var card = document.querySelector('.popup');
+    card.remove();
+    mapPinMain.style.top = startCoords.y;
+    mapPinMain.style.left = startCoords.x;
   };
 
-  var enableControls = function (element) {
-    element.forEach(function (item) {
-      item.disabled = false;
-    });
-  };
-
-  var enableActiveMode = function () {
+  var enableMap = function () {
     map.classList.remove('map--faded');
-    adForm.classList.remove('ad-form--disabled');
-    enableControls(fieldsets);
-    enableControls(selects);
+    isActive = true;
     window.xhr.load(function (response) {
       var fragment = window.pins.createMapPins(response);
       mapPins.appendChild(fragment);
@@ -54,21 +55,21 @@
     };
   };
 
-  var disableMap = function () {
-    defineCoordinatesMap();
-    disableControls(fieldsets);
-    disableControls(selects);
-  };
-
   mapPinMain.addEventListener('mousedown', function (evt) {
     if (evt.button === 0) {
-      enableActiveMode();
+      if (!isActive) {
+        enableMap();
+        window.form.enableForm();
+      }
     }
   });
 
   mapPinMain.addEventListener('keydown', function (evt) {
     if (evt.key === 'Enter') {
-      enableActiveMode();
+      if (!isActive) {
+        enableMap();
+        window.form.enableForm();
+      }
     }
   });
 
