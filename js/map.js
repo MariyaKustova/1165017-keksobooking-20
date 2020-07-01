@@ -9,16 +9,23 @@
     y: mapPinMain.style.top
   };
   var isActive = false;
+  var ads = [];
 
-  var disableMap = function () {
-    map.classList.add('map--faded');
-    isActive = false;
+  var clearMap = function () {
     var pins = mapPins.querySelectorAll('.map__pin');
     for (var i = 1; i < pins.length; i++) {
       pins[i].remove();
     }
     var card = document.querySelector('.popup');
-    card.remove();
+    if (card) {
+      card.remove();
+    }
+  };
+
+  var disableMap = function () {
+    map.classList.add('map--faded');
+    isActive = false;
+    clearMap();
     mapPinMain.style.top = startCoords.y;
     mapPinMain.style.left = startCoords.x;
   };
@@ -26,10 +33,11 @@
   var enableMap = function () {
     map.classList.remove('map--faded');
     isActive = true;
-    window.xhr.load(function (response) {
-      var fragment = window.pins.createMapPins(response);
+    window.xhr.load(function (data) {
+      ads = data;
+      var fragment = window.pins.createMapPins(data);
       mapPins.appendChild(fragment);
-      window.card.createCard(response[0]);
+      window.card.createCard(data[0]);
     }, function (errorMessage) {
       var messageErrorTmpl = document.querySelector('#error-get').content.querySelector('.error');
       var messageError = messageErrorTmpl.cloneNode(true);
@@ -38,6 +46,21 @@
     });
     window.form.refreshAddress();
   };
+
+  var formFiltration = document.querySelector('.map__filters');
+  var housingType = formFiltration.querySelector('#housing-type');
+
+  housingType.addEventListener('change', function () {
+    clearMap();
+    var result = ads.filter(function (it) {
+      if (housingType.value === 'any') {
+        return true;
+      }
+      return it.offer.type === housingType.value;
+    });
+    var fragment = window.pins.createMapPins(result);
+    mapPins.appendChild(fragment);
+  });
 
   var defineCoordinatesMap = function () {
     var coordinateX;
