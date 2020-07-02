@@ -77,8 +77,17 @@
     }
   };
 
+  // Функция удаления карточки объявления
+  var removeCard = function () {
+    var card = map.querySelector('.map__card');
+    if (card) {
+      card.remove();
+    }
+  };
+
   // Функция создания одной карточки объявления
   var createCard = function (element) {
+    removeCard();
     var card = popup.cloneNode(true);
     createSimpleText(card.querySelector('.popup__title'), element.offer.title);
     createSimpleText(card.querySelector('.popup__text--address'), element.offer.address);
@@ -90,8 +99,18 @@
     createSimpleText(card.querySelector('.popup__description'), element.offer.description);
     createPhotos(card.querySelector('.popup__photos'), element);
     createAvatar(card.querySelector('.popup__avatar'), element.author.avatar);
+    var closeButton = card.querySelector('.popup__close');
+    closeButton.addEventListener('click', function () {
+      removeCard();
+    });
     map.insertBefore(card, mapFiltersContainer);
   };
+
+  map.addEventListener('keydown', function (evt) {
+    if (evt.key === 'Escape') {
+      removeCard();
+    }
+  });
 
   window.card = {
     createCard: createCard,

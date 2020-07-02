@@ -19,6 +19,16 @@
     var fragment = document.createDocumentFragment();
     ads.forEach(function (item) {
       var mapPin = createMapPin(item);
+      mapPin.addEventListener('mousedown', function (evt) {
+        if (evt.button === 0) {
+          window.card.createCard(item);
+        }
+      });
+      mapPin.addEventListener('keydown', function (evt) {
+        if (evt.key === 'Enter') {
+          window.card.createCard(item);
+        }
+      });
       fragment.appendChild(mapPin);
     });
     return fragment;
