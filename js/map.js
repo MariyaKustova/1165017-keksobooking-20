@@ -35,9 +35,8 @@
     isActive = true;
     window.xhr.load(function (data) {
       ads = data;
-      var fragment = window.pins.createMapPins(data);
-      mapPins.appendChild(fragment);
-      window.card.createCard(data[0]);
+      window.filter.init(ads);
+      window.filter.onChangeFormFiltration();
     }, function (errorMessage) {
       var messageErrorTmpl = document.querySelector('#error-get').content.querySelector('.error');
       var messageError = messageErrorTmpl.cloneNode(true);
@@ -46,21 +45,6 @@
     });
     window.form.refreshAddress();
   };
-
-  var formFiltration = document.querySelector('.map__filters');
-  var housingType = formFiltration.querySelector('#housing-type');
-
-  housingType.addEventListener('change', function () {
-    clearMap();
-    var result = ads.filter(function (it) {
-      if (housingType.value === 'any') {
-        return true;
-      }
-      return it.offer.type === housingType.value;
-    });
-    var fragment = window.pins.createMapPins(result);
-    mapPins.appendChild(fragment);
-  });
 
   var defineCoordinatesMap = function () {
     var coordinateX;
@@ -101,6 +85,7 @@
     mapPins: mapPins,
     mapPinMain: mapPinMain,
     defineCoordinatesMap: defineCoordinatesMap,
-    disableMap: disableMap
+    disableMap: disableMap,
+    clearMap: clearMap
   };
 })();
