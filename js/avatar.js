@@ -39,7 +39,6 @@
 
     if (matches) {
       var reader = new FileReader();
-
       reader.addEventListener('load', function () {
         var photo = document.createElement('img');
         photo.src = reader.result;
@@ -52,8 +51,15 @@
     }
   });
 
-  window.avatar.removeImage = function () {
+  var removeImage = function () {
     previewAvatar.src = AVATAR_TEMPLATE;
-    previewPhoto = '';
+    var photos = previewPhoto.querySelectorAll('img');
+    photos.forEach(function (it) {
+      it.remove();
+    });
+  };
+
+  window.avatar = {
+    removeImage: removeImage
   };
 })();
