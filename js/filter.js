@@ -10,8 +10,8 @@
   var housingFeatures = formFiltration.querySelector('#housing-features');
   var ads = [];
 
-  var init = function (initAds) {
-    ads = initAds;
+  var init = function (data) {
+    ads = data;
   };
 
   var filterPrice = function (price, selectedValue) {

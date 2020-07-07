@@ -32,6 +32,7 @@
     disableControls(fieldsets);
     disableControls(selects);
     adForm.reset();
+    window.avatar.removeImage();
     refreshAddress();
   };
 

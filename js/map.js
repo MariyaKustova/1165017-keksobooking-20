@@ -9,7 +9,6 @@
     y: mapPinMain.style.top
   };
   var isActive = false;
-  var ads = [];
 
   var clearMap = function () {
     var pins = mapPins.querySelectorAll('.map__pin');
@@ -34,8 +33,7 @@
     map.classList.remove('map--faded');
     isActive = true;
     window.xhr.load(function (data) {
-      ads = data;
-      window.filter.init(ads);
+      window.filter.init(data);
       window.filter.onChangeFormFiltration();
     }, function (errorMessage) {
       var messageErrorTmpl = document.querySelector('#error-get').content.querySelector('.error');
