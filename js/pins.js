@@ -16,8 +16,9 @@
   };
 
   var createMapPins = function (ads) {
+    var shortList = ads.slice(0, 5);
     var fragment = document.createDocumentFragment();
-    ads.forEach(function (item) {
+    shortList.forEach(function (item) {
       var mapPin = createMapPin(item);
       mapPin.addEventListener('mousedown', function (evt) {
         if (evt.button === 0) {
