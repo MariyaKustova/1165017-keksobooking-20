@@ -43,21 +43,6 @@
     window.form.refreshAddress();
   };
 
-  var formFiltration = document.querySelector('.map__filters');
-  var housingType = formFiltration.querySelector('#housing-type');
-
-  housingType.addEventListener('change', function () {
-    clearMap();
-    var result = ads.filter(function (it) {
-      if (housingType.value === 'any') {
-        return true;
-      }
-      return it.offer.type === housingType.value;
-    });
-    var fragment = window.pins.createMapPins(result);
-    mapPins.appendChild(fragment);
-  });
-
   var defineCoordinatesMap = function () {
     var coordinateX;
     var coordinateY;
