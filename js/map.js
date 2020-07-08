@@ -35,9 +35,8 @@
     isActive = true;
     window.xhr.load(function (data) {
       ads = data;
-      var fragment = window.pins.createMapPins(data);
-      mapPins.appendChild(fragment);
-      window.card.createCard(data[0]);
+      window.filter.init(ads);
+      window.filter.onChangeFormFiltration();
     }, function (errorMessage) {
       var messageErrorTmpl = document.querySelector('#error-get').content.querySelector('.error');
       var messageError = messageErrorTmpl.cloneNode(true);
@@ -101,6 +100,7 @@
     mapPins: mapPins,
     mapPinMain: mapPinMain,
     defineCoordinatesMap: defineCoordinatesMap,
-    disableMap: disableMap
+    disableMap: disableMap,
+    clearMap: clearMap
   };
 })();
