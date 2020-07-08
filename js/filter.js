@@ -63,8 +63,7 @@
         break;
       }
     }
-    var fragment = window.pins.createMapPins(result);
-    window.map.mapPins.appendChild(fragment);
+    window.map.drawPins(result);
   });
 
   formFiltration.addEventListener('change', onChangeFormFiltration);

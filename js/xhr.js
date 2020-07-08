@@ -1,7 +1,8 @@
 'use strict';
 (function () {
-  var URL_GET = 'https://javascript.pages.academy/keksobooking/data';
-  var URL_POST = 'https://javascript.pages.academy/keksobooking';
+  var BASE_URL = 'https://javascript.pages.academy';
+  var URL_GET = BASE_URL + '/keksobooking/data';
+  var URL_POST = BASE_URL + '/keksobooking';
   var StatusCode = {
     OK: 200
   };

@@ -1,8 +1,19 @@
 'use strict';
 
 (function () {
+  var HIDDEN_CLASS_NAME = 'hidden';
   var map = window.map.map;
   var popup = document.querySelector('#card').content.querySelector('.popup');
+  var textFormsGuests = {
+    oneToFive: 'гостя',
+    sixToTwenty: 'гостей',
+    endsOnOne: 'гость'
+  };
+  var textFormsRooms = {
+    oneToFive: 'комнаты',
+    sixToTwenty: 'комнат',
+    endsOnOne: 'комната'
+  };
 
   var createPhotos = function (container, element) {
     var photos = element.offer.photos;
@@ -13,41 +24,33 @@
       photo.src = item;
       container.appendChild(photo);
     });
-    photoTemplate.classList.add('hidden');
+    photoTemplate.classList.add(HIDDEN_CLASS_NAME);
   };
 
   var createFeatures = function (container, element) {
     var features = element.offer.features;
     hideUnexistingElement(container, features);
-    var facilities = container.querySelectorAll('.popup__feature');
-    facilities.forEach(function (item) {
-      item.classList.add('hidden');
-    });
     features.forEach(function (item) {
-      container.querySelector('.popup__feature--' + item).classList.remove('hidden');
+      container.querySelector('.popup__feature--' + item).classList.remove(HIDDEN_CLASS_NAME);
     });
   };
 
   var checkEmptyItem = function (element) {
-    if (element === '' || element === null || element === undefined) {
-      return true;
-    } else {
-      return false;
-    }
+    return (element === null || element === undefined || element.length === 0);
   };
 
   var createCapacity = function (container, element) {
     if (checkEmptyItem(element.offer.rooms) || checkEmptyItem(element.offer.guests)) {
-      container.classList.add('hidden');
+      container.classList.add(HIDDEN_CLASS_NAME);
     } else {
-      container.textContent = element.offer.rooms + ' ' + window.utils.inclineNumber(element.offer.rooms, ['комната', 'комнаты', 'комнат']) + ' для ' +
-        element.offer.guests + ' ' + window.utils.inclineNumber(element.offer.guests, ['гостя', 'гостей', 'гостей']);
+      container.textContent = element.offer.rooms + ' ' + window.utils.inclineNumber(element.offer.rooms, textFormsRooms) + ' для ' +
+        element.offer.guests + ' ' + window.utils.inclineNumber(element.offer.guests, textFormsGuests);
     }
   };
 
   var createTime = function (container, element) {
     if (checkEmptyItem(element.offer.checkin) || checkEmptyItem(element.offer.checkout)) {
-      container.classList.add('hidden');
+      container.classList.add(HIDDEN_CLASS_NAME);
     } else {
       container.textContent = 'Заезд до ' + element.offer.checkin + ', выезд до ' + element.offer.checkout;
     }
@@ -55,7 +58,7 @@
 
   var createAvatar = function (container, element) {
     if (checkEmptyItem(element)) {
-      container.classList.add('hidden');
+      container.classList.add(HIDDEN_CLASS_NAME);
     } else {
       container.src = element;
     }
@@ -63,17 +66,21 @@
 
   var hideUnexistingElement = function (container, element) {
     if (checkEmptyItem(element)) {
-      container.classList.add('hidden');
+      container.classList.add(HIDDEN_CLASS_NAME);
     }
   };
 
-  var mapFiltersContainer = map.querySelector('.map__filters-container');
-
   var createSimpleText = function (container, element) {
     if (checkEmptyItem(element)) {
-      container.classList.add('hidden');
+      container.classList.add(HIDDEN_CLASS_NAME);
     } else {
       container.textContent = element;
+    }
+  };
+
+  var onKeydownMap = function (evt) {
+    if (evt.key === 'Escape') {
+      removeCard();
     }
   };
 
@@ -82,6 +89,7 @@
     var card = map.querySelector('.map__card');
     if (card) {
       card.remove();
+      map.removeEventListener('keydown', onKeydownMap);
     }
   };
 
@@ -103,16 +111,12 @@
     closeButton.addEventListener('click', function () {
       removeCard();
     });
-    map.insertBefore(card, mapFiltersContainer);
+    map.addEventListener('keydown', onKeydownMap);
+    window.map.drawCard(card);
   };
-
-  map.addEventListener('keydown', function (evt) {
-    if (evt.key === 'Escape') {
-      removeCard();
-    }
-  });
 
   window.card = {
     createCard: createCard,
+    removeCard: removeCard
   };
 })();
