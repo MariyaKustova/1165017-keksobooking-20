@@ -90,6 +90,7 @@
     if (card) {
       card.remove();
       map.removeEventListener('keydown', onKeydownMap);
+      window.pins.disableHighlightFromActivePin();
     }
   };
 

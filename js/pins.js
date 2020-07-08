@@ -1,9 +1,10 @@
 'use strict';
 
 (function () {
-  var pin = document.querySelector('#pin').content.querySelector('.map__pin');
+  var ACTIVE_PIN_CLASS_NAME = 'map__pin--active';
   var OFFSET_X = window.map.mapPinMain.offsetWidth / 2;
   var OFFSET_Y = 84;
+  var pin = document.querySelector('#pin').content.querySelector('.map__pin');
 
   var createMapPin = function (card) {
     var mapPin = pin.cloneNode(true);
@@ -23,11 +24,13 @@
       mapPin.addEventListener('mousedown', function (evt) {
         if (evt.button === 0) {
           window.card.createCard(item);
+          mapPin.classList.add(ACTIVE_PIN_CLASS_NAME);
         }
       });
       mapPin.addEventListener('keydown', function (evt) {
         if (evt.key === 'Enter') {
           window.card.createCard(item);
+          mapPin.classList.add(ACTIVE_PIN_CLASS_NAME);
         }
       });
       fragment.appendChild(mapPin);
@@ -35,9 +38,17 @@
     return fragment;
   };
 
+  var disableHighlightFromActivePin = function () {
+    var activePin = window.map.mapPins.querySelector('.' + ACTIVE_PIN_CLASS_NAME);
+    if (activePin) {
+      activePin.classList.remove(ACTIVE_PIN_CLASS_NAME);
+    }
+  };
+
   window.pins = {
     OFFSET_X: OFFSET_X,
     OFFSET_Y: OFFSET_Y,
-    createMapPins: createMapPins
+    createMapPins: createMapPins,
+    disableHighlightFromActivePin: disableHighlightFromActivePin
   };
 })();
