@@ -16,6 +16,11 @@
     return mapPin;
   };
 
+  var showCard = function (element, mapPin, className) {
+    window.card.createCard(element);
+    mapPin.classList.add(className);
+  };
+
   var createMapPins = function (ads) {
     var shortList = ads.slice(0, 5);
     var fragment = document.createDocumentFragment();
@@ -23,14 +28,12 @@
       var mapPin = createMapPin(item);
       mapPin.addEventListener('mousedown', function (evt) {
         if (evt.button === 0) {
-          window.card.createCard(item);
-          mapPin.classList.add(ACTIVE_PIN_CLASS_NAME);
+          showCard(item, mapPin, ACTIVE_PIN_CLASS_NAME);
         }
       });
       mapPin.addEventListener('keydown', function (evt) {
         if (evt.key === 'Enter') {
-          window.card.createCard(item);
-          mapPin.classList.add(ACTIVE_PIN_CLASS_NAME);
+          showCard(item, mapPin, ACTIVE_PIN_CLASS_NAME);
         }
       });
       fragment.appendChild(mapPin);

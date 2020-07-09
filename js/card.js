@@ -15,53 +15,10 @@
     endsOnOne: 'комната'
   };
 
-  var createPhotos = function (container, element) {
-    var photos = element.offer.photos;
-    hideUnexistingElement(container, photos);
-    var photoTemplate = container.querySelector('.popup__photo');
-    photos.forEach(function (item) {
-      var photo = photoTemplate.cloneNode(true);
-      photo.src = item;
-      container.appendChild(photo);
-    });
-    photoTemplate.classList.add(HIDDEN_CLASS_NAME);
-  };
-
-  var createFeatures = function (container, element) {
-    var features = element.offer.features;
-    hideUnexistingElement(container, features);
-    features.forEach(function (item) {
-      container.querySelector('.popup__feature--' + item).classList.remove(HIDDEN_CLASS_NAME);
-    });
-  };
-
   var checkEmptyItem = function (element) {
+    // мы не можем использовать здесь условие (!element || element === 0),
+    // так как значения вроде '0' должно быть отражено
     return (element === null || element === undefined || element.length === 0);
-  };
-
-  var createCapacity = function (container, element) {
-    if (checkEmptyItem(element.offer.rooms) || checkEmptyItem(element.offer.guests)) {
-      container.classList.add(HIDDEN_CLASS_NAME);
-    } else {
-      container.textContent = element.offer.rooms + ' ' + window.utils.inclineNumber(element.offer.rooms, textFormsRooms) + ' для ' +
-        element.offer.guests + ' ' + window.utils.inclineNumber(element.offer.guests, textFormsGuests);
-    }
-  };
-
-  var createTime = function (container, element) {
-    if (checkEmptyItem(element.offer.checkin) || checkEmptyItem(element.offer.checkout)) {
-      container.classList.add(HIDDEN_CLASS_NAME);
-    } else {
-      container.textContent = 'Заезд до ' + element.offer.checkin + ', выезд до ' + element.offer.checkout;
-    }
-  };
-
-  var createAvatar = function (container, element) {
-    if (checkEmptyItem(element)) {
-      container.classList.add(HIDDEN_CLASS_NAME);
-    } else {
-      container.src = element;
-    }
   };
 
   var hideUnexistingElement = function (container, element) {
@@ -70,10 +27,57 @@
     }
   };
 
+  var createPhotos = function (container, element) {
+    var photos = element.offer.photos;
+    hideUnexistingElement(container, photos);
+    if (!container.classList.contains(HIDDEN_CLASS_NAME)) {
+      var photoTemplate = container.querySelector('.popup__photo');
+      photos.forEach(function (item) {
+        var photo = photoTemplate.cloneNode(true);
+        photo.src = item;
+        container.appendChild(photo);
+      });
+      photoTemplate.classList.add(HIDDEN_CLASS_NAME);
+    }
+  };
+
+  var createFeatures = function (container, element) {
+    var features = element.offer.features;
+    hideUnexistingElement(container, features);
+    if (!container.classList.contains(HIDDEN_CLASS_NAME)) {
+      features.forEach(function (item) {
+        container.querySelector('.popup__feature--' + item).classList.remove(HIDDEN_CLASS_NAME);
+      });
+    }
+  };
+
+  var createCapacity = function (container, element) {
+    hideUnexistingElement(container, element.offer.rooms);
+    hideUnexistingElement(container, element.offer.guests);
+    if (!container.classList.contains(HIDDEN_CLASS_NAME)) {
+      container.textContent = element.offer.rooms + ' ' + window.utils.inclineNumber(element.offer.rooms, textFormsRooms) + ' для ' +
+        element.offer.guests + ' ' + window.utils.inclineNumber(element.offer.guests, textFormsGuests);
+    }
+  };
+
+  var createTime = function (container, element) {
+    hideUnexistingElement(container, element.offer.checkin);
+    hideUnexistingElement(container, element.offer.checkout);
+    if (!container.classList.contains(HIDDEN_CLASS_NAME)) {
+      container.textContent = 'Заезд до ' + element.offer.checkin + ', выезд до ' + element.offer.checkout;
+    }
+  };
+
+  var createAvatar = function (container, element) {
+    hideUnexistingElement(container, element);
+    if (!container.classList.contains(HIDDEN_CLASS_NAME)) {
+      container.src = element;
+    }
+  };
+
   var createSimpleText = function (container, element) {
-    if (checkEmptyItem(element)) {
-      container.classList.add(HIDDEN_CLASS_NAME);
-    } else {
+    hideUnexistingElement(container, element);
+    if (!container.classList.contains(HIDDEN_CLASS_NAME)) {
       container.textContent = element;
     }
   };
@@ -109,9 +113,7 @@
     createPhotos(card.querySelector('.popup__photos'), element);
     createAvatar(card.querySelector('.popup__avatar'), element.author.avatar);
     var closeButton = card.querySelector('.popup__close');
-    closeButton.addEventListener('click', function () {
-      removeCard();
-    });
+    closeButton.addEventListener('click', removeCard);
     map.addEventListener('keydown', onKeydownMap);
     window.map.drawCard(card);
   };

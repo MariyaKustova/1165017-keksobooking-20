@@ -1,9 +1,10 @@
 'use strict';
 
 (function () {
+  var MAP_FADED_CLASS_NAME = 'map--faded';
   var map = document.querySelector('.map');
   var mapFiltersContainer = map.querySelector('.map__filters-container');
-  var mapPins = document.querySelector('.map__pins');
+  var mapPins = map.querySelector('.map__pins');
   var mapPinMain = mapPins.querySelector('.map__pin--main');
   var startCoords = {
     x: mapPinMain.style.left,
@@ -20,7 +21,7 @@
   };
 
   var disableMap = function () {
-    map.classList.add('map--faded');
+    map.classList.add(MAP_FADED_CLASS_NAME);
     isActive = false;
     clearMap();
     mapPinMain.style.top = startCoords.y;
@@ -28,17 +29,13 @@
   };
 
   var enableMap = function () {
-    map.classList.remove('map--faded');
+    map.classList.remove(MAP_FADED_CLASS_NAME);
     isActive = true;
     window.xhr.load(function (data) {
       window.filter.init(data);
       window.filter.onChangeFormFiltration();
     }, function (errorMessage) {
-      var messageErrorTmpl = document.querySelector('#error-get').content.querySelector('.error');
-      var messageError = messageErrorTmpl.cloneNode(true);
-      messageError.querySelector('.error__message').textContent += ' ' + errorMessage;
-      document.body.appendChild(messageError);
-      window.page.addLisenerOnRemoveElement(messageError);
+      window.form.showMessage('error-get', errorMessage);
     });
     window.form.refreshAddress();
   };
@@ -46,7 +43,7 @@
   var defineCoordinatesMap = function () {
     var coordinateX;
     var coordinateY;
-    if (map.classList.contains('map--faded')) {
+    if (map.classList.contains(MAP_FADED_CLASS_NAME)) {
       coordinateX = Math.round(parseInt(mapPinMain.style.left, 10) + window.pins.OFFSET_X);
       coordinateY = Math.round(parseInt(mapPinMain.style.top, 10) + mapPinMain.offsetHeight / 2);
     } else {

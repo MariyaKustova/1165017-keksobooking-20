@@ -92,19 +92,22 @@
   roomNumber.addEventListener('change', validateRoomCapacity);
   capacity.addEventListener('change', validateRoomCapacity);
 
-  var showMessage = function (selector) {
-    var messageTmpl = document.querySelector('#' + selector).content.querySelector('.' + selector);
-    var message = messageTmpl.cloneNode(true);
-    document.body.appendChild(message);
-    window.page.addLisenerOnRemoveElement(message);
+  var showMessage = function (selector, message) {
+    var messageTmpl = document.querySelector('#' + selector).content.querySelector('div');
+    var messageDialog = messageTmpl.cloneNode(true);
+    if (message) {
+      messageDialog.querySelector('p').textContent += ' ' + message;
+    }
+    document.body.appendChild(messageDialog);
+    window.page.addLisenerOnRemoveElement(messageDialog);
   };
 
   adForm.addEventListener('submit', function (evt) {
     window.xhr.upload(new FormData(adForm), function () {
-      showMessage('success');
+      showMessage('success', null);
       window.page.disablePage();
     }, function () {
-      showMessage('error');
+      showMessage('error', null);
     });
     evt.preventDefault();
   });
@@ -125,6 +128,7 @@
     adForm: adForm,
     enableForm: enableForm,
     disableForm: disableForm,
-    refreshAddress: refreshAddress
+    refreshAddress: refreshAddress,
+    showMessage: showMessage
   };
 })();
