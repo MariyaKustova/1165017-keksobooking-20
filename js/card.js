@@ -1,79 +1,90 @@
 'use strict';
 
 (function () {
+  var HIDDEN_CLASS_NAME = 'hidden';
   var map = window.map.map;
   var popup = document.querySelector('#card').content.querySelector('.popup');
+  var textFormsGuests = {
+    oneToFive: 'гостя',
+    sixToTwenty: 'гостей',
+    endsOnOne: 'гость'
+  };
+  var textFormsRooms = {
+    oneToFive: 'комнаты',
+    sixToTwenty: 'комнат',
+    endsOnOne: 'комната'
+  };
+
+  var checkEmptyItem = function (element) {
+    // мы не можем использовать здесь условие (!element || element === 0),
+    // так как значения вроде '0' должно быть отражено
+    return (element === null || element === undefined || element.length === 0);
+  };
+
+  var hideUnexistingElement = function (container, element) {
+    if (checkEmptyItem(element)) {
+      container.classList.add(HIDDEN_CLASS_NAME);
+    }
+  };
 
   var createPhotos = function (container, element) {
     var photos = element.offer.photos;
     hideUnexistingElement(container, photos);
-    var photoTemplate = container.querySelector('.popup__photo');
-    photos.forEach(function (item) {
-      var photo = photoTemplate.cloneNode(true);
-      photo.src = item;
-      container.appendChild(photo);
-    });
-    photoTemplate.classList.add('hidden');
+    if (!container.classList.contains(HIDDEN_CLASS_NAME)) {
+      var photoTemplate = container.querySelector('.popup__photo');
+      photos.forEach(function (item) {
+        var photo = photoTemplate.cloneNode(true);
+        photo.src = item;
+        container.appendChild(photo);
+      });
+      photoTemplate.classList.add(HIDDEN_CLASS_NAME);
+    }
   };
 
   var createFeatures = function (container, element) {
     var features = element.offer.features;
     hideUnexistingElement(container, features);
-    var facilities = container.querySelectorAll('.popup__feature');
-    facilities.forEach(function (item) {
-      item.classList.add('hidden');
-    });
-    features.forEach(function (item) {
-      container.querySelector('.popup__feature--' + item).classList.remove('hidden');
-    });
-  };
-
-  var checkEmptyItem = function (element) {
-    if (element === '' || element === null || element === undefined) {
-      return true;
-    } else {
-      return false;
+    if (!container.classList.contains(HIDDEN_CLASS_NAME)) {
+      features.forEach(function (item) {
+        container.querySelector('.popup__feature--' + item).classList.remove(HIDDEN_CLASS_NAME);
+      });
     }
   };
 
   var createCapacity = function (container, element) {
-    if (checkEmptyItem(element.offer.rooms) || checkEmptyItem(element.offer.guests)) {
-      container.classList.add('hidden');
-    } else {
-      container.textContent = element.offer.rooms + ' ' + window.utils.inclineNumber(element.offer.rooms, ['комната', 'комнаты', 'комнат']) + ' для ' +
-        element.offer.guests + ' ' + window.utils.inclineNumber(element.offer.guests, ['гостя', 'гостей', 'гостей']);
+    hideUnexistingElement(container, element.offer.rooms);
+    hideUnexistingElement(container, element.offer.guests);
+    if (!container.classList.contains(HIDDEN_CLASS_NAME)) {
+      container.textContent = element.offer.rooms + ' ' + window.utils.inclineNumber(element.offer.rooms, textFormsRooms) + ' для ' +
+        element.offer.guests + ' ' + window.utils.inclineNumber(element.offer.guests, textFormsGuests);
     }
   };
 
   var createTime = function (container, element) {
-    if (checkEmptyItem(element.offer.checkin) || checkEmptyItem(element.offer.checkout)) {
-      container.classList.add('hidden');
-    } else {
+    hideUnexistingElement(container, element.offer.checkin);
+    hideUnexistingElement(container, element.offer.checkout);
+    if (!container.classList.contains(HIDDEN_CLASS_NAME)) {
       container.textContent = 'Заезд до ' + element.offer.checkin + ', выезд до ' + element.offer.checkout;
     }
   };
 
   var createAvatar = function (container, element) {
-    if (checkEmptyItem(element)) {
-      container.classList.add('hidden');
-    } else {
+    hideUnexistingElement(container, element);
+    if (!container.classList.contains(HIDDEN_CLASS_NAME)) {
       container.src = element;
     }
   };
 
-  var hideUnexistingElement = function (container, element) {
-    if (checkEmptyItem(element)) {
-      container.classList.add('hidden');
+  var createSimpleText = function (container, element) {
+    hideUnexistingElement(container, element);
+    if (!container.classList.contains(HIDDEN_CLASS_NAME)) {
+      container.textContent = element;
     }
   };
 
-  var mapFiltersContainer = map.querySelector('.map__filters-container');
-
-  var createSimpleText = function (container, element) {
-    if (checkEmptyItem(element)) {
-      container.classList.add('hidden');
-    } else {
-      container.textContent = element;
+  var onKeydownMap = function (evt) {
+    if (evt.key === 'Escape') {
+      removeCard();
     }
   };
 
@@ -82,6 +93,8 @@
     var card = map.querySelector('.map__card');
     if (card) {
       card.remove();
+      map.removeEventListener('keydown', onKeydownMap);
+      window.pins.disableHighlightFromActivePin();
     }
   };
 
@@ -100,19 +113,13 @@
     createPhotos(card.querySelector('.popup__photos'), element);
     createAvatar(card.querySelector('.popup__avatar'), element.author.avatar);
     var closeButton = card.querySelector('.popup__close');
-    closeButton.addEventListener('click', function () {
-      removeCard();
-    });
-    map.insertBefore(card, mapFiltersContainer);
+    closeButton.addEventListener('click', removeCard);
+    map.addEventListener('keydown', onKeydownMap);
+    window.map.drawCard(card);
   };
-
-  map.addEventListener('keydown', function (evt) {
-    if (evt.key === 'Escape') {
-      removeCard();
-    }
-  });
 
   window.card = {
     createCard: createCard,
+    removeCard: removeCard
   };
 })();

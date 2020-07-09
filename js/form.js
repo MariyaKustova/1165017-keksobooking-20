@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var AD_FORM_DISABLED_CLASS_NAME = 'ad-form--disabled';
   var adForm = document.querySelector('.ad-form');
   var selectType = adForm.querySelector('#type');
   var priceInput = adForm.querySelector('#price');
@@ -26,17 +27,18 @@
   };
 
   var disableForm = function () {
-    if (!adForm.classList.contains('ad-form--disabled')) {
-      adForm.classList.add('ad-form--disabled');
+    if (!adForm.classList.contains(AD_FORM_DISABLED_CLASS_NAME)) {
+      adForm.classList.add(AD_FORM_DISABLED_CLASS_NAME);
     }
     disableControls(fieldsets);
     disableControls(selects);
     adForm.reset();
+    window.photosLoader.removeImages();
     refreshAddress();
   };
 
   var enableForm = function () {
-    adForm.classList.remove('ad-form--disabled');
+    adForm.classList.remove(AD_FORM_DISABLED_CLASS_NAME);
     enableControls(fieldsets);
     enableControls(selects);
   };
@@ -90,60 +92,43 @@
   roomNumber.addEventListener('change', validateRoomCapacity);
   capacity.addEventListener('change', validateRoomCapacity);
 
-  var onDocumentClick = function (element) {
-    document.addEventListener('click', function () {
-      element.remove();
-    });
-  };
-
-  var onDocumentKeydown = function (element) {
-    document.addEventListener('keydown', function (evt) {
-      if (evt.key === 'Escape') {
-        element.remove();
-      }
-    });
-  };
-
-  var showMessageSuccess = function () {
-    var messageSuccessTmpl = document.querySelector('#success').content.querySelector('.success');
-    var messageSuccess = messageSuccessTmpl.cloneNode(true);
-    document.body.appendChild(messageSuccess);
-    onDocumentClick(messageSuccess);
-    onDocumentKeydown(messageSuccess);
+  var showMessage = function (selector, message) {
+    var messageTmpl = document.querySelector('#' + selector).content.querySelector('div');
+    var messageDialog = messageTmpl.cloneNode(true);
+    if (message) {
+      messageDialog.querySelector('p').textContent += ' ' + message;
+    }
+    document.body.appendChild(messageDialog);
+    window.page.addListenerOnRemoveElement(messageDialog);
   };
 
   adForm.addEventListener('submit', function (evt) {
     window.xhr.upload(new FormData(adForm), function () {
-      showMessageSuccess();
-      window.map.disableMap();
-      disableForm();
+      showMessage('success', null);
+      window.page.disablePage();
     }, function () {
-      var messageErrorTmpl = document.querySelector('#error').content.querySelector('.error');
-      var messageError = messageErrorTmpl.cloneNode(true);
-      document.body.appendChild(messageError);
-      onDocumentClick(messageError);
-      onDocumentKeydown(messageError);
+      showMessage('error', null);
     });
     evt.preventDefault();
   });
 
   buttonResetForm.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
-    window.map.disableMap();
-    disableForm();
+    window.page.disablePage();
   });
 
   buttonResetForm.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
     if (evt.button === 0) {
-      window.map.disableMap();
-      disableForm();
+      window.page.disablePage();
     }
   });
 
   window.form = {
+    adForm: adForm,
     enableForm: enableForm,
     disableForm: disableForm,
-    refreshAddress: refreshAddress
+    refreshAddress: refreshAddress,
+    showMessage: showMessage
   };
 })();

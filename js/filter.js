@@ -10,8 +10,8 @@
   var housingFeatures = formFiltration.querySelector('#housing-features');
   var ads = [];
 
-  var init = function (initAds) {
-    ads = initAds;
+  var init = function (data) {
+    ads = data;
   };
 
   var filterPrice = function (price, selectedValue) {
@@ -63,8 +63,7 @@
         break;
       }
     }
-    var fragment = window.pins.createMapPins(result);
-    window.map.mapPins.appendChild(fragment);
+    window.map.drawPins(result);
   });
 
   formFiltration.addEventListener('change', onChangeFormFiltration);
