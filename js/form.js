@@ -99,7 +99,7 @@
       messageDialog.querySelector('p').textContent += ' ' + message;
     }
     document.body.appendChild(messageDialog);
-    window.page.addLisenerOnRemoveElement(messageDialog);
+    window.page.addListenerOnRemoveElement(messageDialog);
   };
 
   adForm.addEventListener('submit', function (evt) {

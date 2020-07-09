@@ -26,7 +26,7 @@
     });
   };
 
-  var addLisenerOnRemoveElement = function (element) {
+  var addListenerOnRemoveElement = function (element) {
     onDocumentClick(element);
     onDocumentKeydown(element);
   };
@@ -34,6 +34,6 @@
   window.page = {
     enablePage: enablePage,
     disablePage: disablePage,
-    addLisenerOnRemoveElement: addLisenerOnRemoveElement
+    addListenerOnRemoveElement: addListenerOnRemoveElement
   };
 })();
