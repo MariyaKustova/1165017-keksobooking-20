@@ -2,6 +2,24 @@
 
 (function () {
   var AD_FORM_DISABLED_CLASS_NAME = 'ad-form--disabled';
+  var TermsOfAccommodation = {
+    BUNGALO: {
+      type: 'bungalo',
+      minPrice: 0
+    },
+    FLAT: {
+      type: 'flat',
+      minPrice: 1000
+    },
+    HOUSE: {
+      type: 'house',
+      minPrice: 5000
+    },
+    PALACE: {
+      type: 'palace',
+      minPrice: 10000
+    },
+  };
   var adForm = document.querySelector('.ad-form');
   var selectType = adForm.querySelector('#type');
   var priceInput = adForm.querySelector('#price');
@@ -50,21 +68,21 @@
 
   selectType.addEventListener('change', function () {
     switch (selectType.value) {
-      case 'bungalo':
-        priceInput.min = 0;
-        priceInput.placeholder = 0;
+      case TermsOfAccommodation.BUNGALO.type:
+        priceInput.min = TermsOfAccommodation.BUNGALO.minPrice;
+        priceInput.placeholder = TermsOfAccommodation.BUNGALO.minPrice;
         break;
-      case 'flat':
-        priceInput.min = 1000;
-        priceInput.placeholder = 1000;
+      case TermsOfAccommodation.FLAT.type:
+        priceInput.min = TermsOfAccommodation.FLAT.minPrice;
+        priceInput.placeholder = TermsOfAccommodation.FLAT.minPrice;
         break;
-      case 'house':
-        priceInput.min = 5000;
-        priceInput.placeholder = 5000;
+      case TermsOfAccommodation.HOUSE.type:
+        priceInput.min = TermsOfAccommodation.HOUSE.minPrice;
+        priceInput.placeholder = TermsOfAccommodation.HOUSE.minPrice;
         break;
-      case 'palace':
-        priceInput.min = 10000;
-        priceInput.placeholder = 10000;
+      case TermsOfAccommodation.PALACE.type:
+        priceInput.min = TermsOfAccommodation.PALACE.minPrice;
+        priceInput.placeholder = TermsOfAccommodation.PALACE.minPrice;
     }
   });
 

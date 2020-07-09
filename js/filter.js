@@ -2,6 +2,16 @@
 
 (function () {
   var MAX_ADS_NUMBER = 5;
+  var PriceRange = {
+    MIN_VALUE: 10000,
+    MIDDLE_VALUE: 50000
+  };
+  var PriceRangeName = {
+    ANY: 'any',
+    MIDDLE: 'middle',
+    LOW: 'low',
+    HIGH: 'high'
+  };
   var formFiltration = document.querySelector('.map__filters');
   var housingType = formFiltration.querySelector('#housing-type');
   var housingPrice = formFiltration.querySelector('#housing-price');
@@ -16,14 +26,14 @@
 
   var filterPrice = function (price, selectedValue) {
     switch (selectedValue) {
-      case 'any':
+      case PriceRangeName.ANY:
         return true;
-      case 'middle':
-        return price >= 10000 && price < 50000;
-      case 'low':
-        return price < 10000;
-      case 'high':
-        return price >= 50000;
+      case PriceRangeName.MIDDLE:
+        return price >= PriceRange.MIN_VALUE && price < PriceRange.MIDDLE_VALUE;
+      case PriceRangeName.LOW:
+        return price < PriceRange.MIN_VALUE;
+      case PriceRangeName.HIGH:
+        return price >= PriceRange.MIDDLE_VALUE;
       default:
         return false;
     }
